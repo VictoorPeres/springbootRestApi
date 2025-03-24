@@ -1,0 +1,90 @@
+SPRING BOOT
+
+- Realizar a configuração do projeto selecionando o Generators como SPRING BOOT, JDK 17. Após isso escolher quais dependências quer instalar na geração do projeto.
+Não esquecer de selecionar LOADER MAVEN
+
+
+ANOTAÇÕES SPRING BOOT
+
+Aqui está um resumo objetivo e direto de cada anotação usada em Spring Boot para criar APIs REST:
+
+📌 Anotações para Criar um Controller REST
+Anotação	Função
+@RestController	Indica que a classe é um controller REST, retornando os dados diretamente no corpo da resposta (sem precisar de @ResponseBody em cada método).
+@RequestMapping	Define a URL base para os endpoints do controlador.
+📌 Anotações para Mapeamento de Requisições
+Anotação	Função
+@GetMapping	Mapeia requisições HTTP GET (usada para buscar dados).
+@PostMapping	Mapeia requisições HTTP POST (usada para enviar dados e criar recursos).
+📌 Anotações para Configurar Respostas
+Anotação	Função
+@ResponseStatus	Define o código de status HTTP que será retornado (exemplo: 200 OK, 201 Created).
+@ResponseBody	Indica que o valor retornado pelo método será o corpo da resposta HTTP (não necessário em @RestController).
+
+📌 Exemplo Prático
+@RestController
+@RequestMapping("/usuarios") // Define a URL base para "/usuarios"
+public class UsuarioController {
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK) // Define o status HTTP como 200 OK
+    public Usuario buscarUsuario(@PathVariable Long id) {
+        return new Usuario(id, "Victor", "victor@email.com");
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED) // Define o status HTTP como 201 Created
+    public Usuario criarUsuario(@RequestBody Usuario usuario) {
+        return usuario; // Aqui normalmente salvaria no banco
+    }
+}
+✅ Explicação do código acima:
+
+@RestController: Indica que a classe é um controlador REST.
+@RequestMapping("/usuarios"): Define que todas as requisições desse controller começam com /usuarios.
+@GetMapping("/{id}"): Quando alguém acessar /usuarios/{id}, o método retorna um usuário.
+@ResponseStatus(HttpStatus.OK): Retorna 200 OK para GET.
+@PostMapping: Mapeia POST /usuarios para criar um novo usuário.
+@ResponseStatus(HttpStatus.CREATED): Retorna 201 Created ao criar um novo usuário.
+@ResponseBody: Retorna os dados diretamente como JSON (implícito em @RestController).
+📌 Resumo Final
+@RestController → Marca a classe como um controller REST.
+@RequestMapping → Define a URL base dos endpoints.
+@GetMapping / @PostMapping → Mapeia requisições GET/POST.
+@ResponseStatus → Define o status HTTP da resposta.
+@ResponseBody → Retorna o conteúdo diretamente no corpo da resposta (não necessário com @RestController).
+
+
+Exemplo de ENDPOINT para salvar dados no banco
+@PostMapping(value = "/salvar")/*Mapeia a URL*/
+    public ResponseEntity<Usuario> salvar(@RequestBody Usuario usuario) {
+        Usuario user = usuarioRepository.save(usuario);
+        return new ResponseEntity<Usuario>(user, HttpStatus.CREATED);
+    }
+
+
+
+RESPONSE ENTITY
+📌 O que é ResponseEntity?
+ResponseEntity<T> é uma classe do Spring Boot usada para personalizar a resposta HTTP de uma API REST.
+
+Com ela, podemos definir:
+✅ O corpo da resposta (dados retornados).
+✅ O status HTTP (200 OK, 201 Created, 404 Not Found, etc.).
+✅ Os headers da resposta (informações adicionais).
+
+📌 Exemplo básico
+java
+Copiar
+Editar
+@GetMapping("/{id}")
+public ResponseEntity<Usuario> buscarUsuario(@PathVariable Long id) {
+    Usuario usuario = usuarioService.buscarPorId(id);
+    return ResponseEntity.ok(usuario); // Retorna 200 OK com o usuário no corpo
+}
+Se encontrar o usuário: retorna 200 OK com os dados.
+Se não encontrar: podemos retornar 404 Not Found.
+📌 Quando usar?
+🔹 Para definir status HTTP personalizados.
+🔹 Para incluir headers na resposta.
+🔹 Para retornar diferentes status dependendo da lógica da API.
