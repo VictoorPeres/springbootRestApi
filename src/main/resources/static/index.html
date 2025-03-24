@@ -25,6 +25,7 @@
         </div>
 
         <button type="button" class="btn btn-primary" onclick="salvarUsuario()">Salvar</button>
+        <button type="button" class="btn btn-secondary" onclick="this.form.reset()">Novo</button>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -41,6 +42,7 @@
                 data: JSON.stringify({id: id, nome: nome, idade: idade}),
                 contentType: "application/json; charset=utf-8",
                 success: function (response){
+                    $("#idUsuario").val(response.id);
                     alert(`Usuário ${response.nome} salvo com sucesso`)
                 }
             }).fail(function (xhr, status, errorThrow){
